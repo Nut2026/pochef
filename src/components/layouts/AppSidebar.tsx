@@ -76,6 +76,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   }, [user]);
 
   const handleSignOut = async () => {
+    pendo.clearSession();
     await signOut();
     navigate('/login');
   };
