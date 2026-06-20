@@ -485,6 +485,18 @@ function AddIngredientForm({
           ripe_to_overripe:      ripeningDays.ripe_to_overripe       ?? 0,
         } : null,
       });
+      if (typeof pendo !== 'undefined') {
+        pendo.track('inventory_item_added_manual', {
+          item_name: name.trim(),
+          quantity,
+          amount_value: parseFloat(amountValue) || 0,
+          amount_unit: amountUnit,
+          price: parseFloat(price),
+          storage_location: defaultStorage,
+          has_ai_shelf_life: !!aiShelfLife,
+          is_fruit: isFruit,
+        });
+      }
       toast.success(`${name} added to inventory!`);
       onAdd();
       onClose();
@@ -527,6 +539,13 @@ function AddIngredientForm({
             return;
           }
           // Normalize ripening_days from OCR 3-field format to 2-field format
+          if (typeof pendo !== 'undefined') {
+            pendo.track('receipt_scanned', {
+              items_extracted_count: items.length,
+              file_type: mimeType,
+              source: 'upload',
+            });
+          }
           const normalized = items.map(item => ({
             ...item,
             ripening_days: item.ripening_days
@@ -579,6 +598,13 @@ function AddIngredientForm({
                 ripe_to_overripe:      rd.ripe_to_overripe       ?? 0,
               }
             : null,
+        });
+      }
+      if (typeof pendo !== 'undefined') {
+        pendo.track('receipt_items_confirmed', {
+          items_count: receiptItems.length,
+          total_price: receiptItems.reduce((sum, i) => sum + (i.price || 0), 0),
+          has_fruit_items: receiptItems.some(i => i.is_fruit),
         });
       }
       toast.success(`Added ${receiptItems.length} item${receiptItems.length !== 1 ? 's' : ''} to inventory!`);
@@ -1068,6 +1094,16 @@ export default function InventoryPage() {
       const computed = computeExpiryFromAI(item.purchase_date, item.ai_shelf_life, newStorage);
       if (computed) newExpiry = computed;
     }
+    if (typeof pendo !== 'undefined') {
+      const newExpiryDays = newExpiry ? getDaysUntilExpiry(newExpiry) : null;
+      pendo.track('inventory_storage_changed', {
+        item_name: item.name,
+        previous_storage: item.storage_location,
+        new_storage: newStorage,
+        has_ai_shelf_life: !!item.ai_shelf_life,
+        new_expiry_days: newExpiryDays,
+      });
+    }
     const updated: InventoryItemEx = toEx({ ...item, storage_location: newStorage, expiry_date: newExpiry });
     setItems(list => list.map(i => i.id === item.id ? updated : i));
     updateInventoryItem(item.id, { storage_location: newStorage, expiry_date: newExpiry }).catch(() => {
@@ -1078,6 +1114,16 @@ export default function InventoryPage() {
 
   // Optimistic expiry change + undo
   const handleExpiryChange = useCallback((item: InventoryItemEx, newDate: string) => {
+    if (typeof pendo !== 'undefined') {
+      const daysDiff = Math.round((new Date(newDate).getTime() - new Date(item.expiry_date).getTime()) / 86400000);
+      pendo.track('inventory_expiry_overridden', {
+        item_name: item.name,
+        previous_expiry_date: item.expiry_date,
+        new_expiry_date: newDate,
+        days_difference: daysDiff,
+        storage_location: item.storage_location,
+      });
+    }
     const prev = item;
     const updated: InventoryItemEx = toEx({ ...item, expiry_date: newDate, is_expiry_override: true });
     setItems(list => list.map(i => i.id === item.id ? updated : i));
@@ -1100,6 +1146,16 @@ export default function InventoryPage() {
   // Optimistic bin with undo (remove from list, defer DB call)
   const handleBinConfirm = useCallback(async (item: InventoryItemEx) => {
     if (!user) return;
+    if (typeof pendo !== 'undefined') {
+      pendo.track('inventory_item_binned', {
+        item_name: item.name,
+        item_price: item.price,
+        days_until_expiry: item.daysUntilExpiry,
+        expiry_status: item.expiryStatus,
+        storage_location: item.storage_location,
+        is_fruit: !!item.is_fruit,
+      });
+    }
     const idx = items.findIndex(i => i.id === item.id);
     setItems(list => list.filter(i => i.id !== item.id));
     setBinItem(null);
@@ -1126,6 +1182,14 @@ export default function InventoryPage() {
 
   // Optimistic remove with undo
   const handleRemove = useCallback((item: InventoryItemEx) => {
+    if (typeof pendo !== 'undefined') {
+      pendo.track('inventory_item_removed', {
+        item_name: item.name,
+        days_until_expiry: item.daysUntilExpiry,
+        expiry_status: item.expiryStatus,
+        storage_location: item.storage_location,
+      });
+    }
     const idx = items.findIndex(i => i.id === item.id);
     setItems(list => list.filter(i => i.id !== item.id));
     toast(`${item.name} removed`, {
@@ -1148,6 +1212,16 @@ export default function InventoryPage() {
   // Ripening stage change
   const handleStageChange = useCallback((itemId: string, stage: RipenessStage) => {
     if (!user) return;
+    if (typeof pendo !== 'undefined') {
+      const item = items.find(i => i.id === itemId);
+      const ri = ripeningMap.get(itemId);
+      pendo.track('ripeness_stage_updated', {
+        item_name: item?.name ?? '',
+        new_stage: stage,
+        previous_stage: ri?.ripeness_stage ?? 'unripe',
+        item_id: itemId,
+      });
+    }
     const now = new Date().toISOString();
     setRipeningMap(prev => {
       const next = new Map(prev);

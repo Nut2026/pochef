@@ -347,6 +347,23 @@ export default function MealPlanningPage() {
 
       setRecipes(rawRecipes);
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track('recipe_suggestions_generated', {
+          recipe_count: rawRecipes.length,
+          dietary_filter: dietary,
+          meal_type_filter: mealType,
+          cuisine_filter: cuisine,
+          cooking_minutes: cookingMinutes,
+          use_up_mode: useUpMode,
+          selected_ingredient: selectedIngredient || null,
+          split_mode: splitMode,
+          prioritize_expiring: prioritizeExpiring,
+          cooking_devices_count: cookingDevices.length,
+          has_constraints: !!constraints.trim(),
+          inventory_size: inventory.length,
+        });
+      }
+
       // Sequential unique image generation — one at a time to avoid duplicates
       (async () => {
         for (let idx = 0; idx < rawRecipes.length; idx++) {
@@ -400,11 +417,27 @@ export default function MealPlanningPage() {
     try {
       const id = await saveRecipe(user.id, recipe as unknown as Record<string, unknown>);
       setSavedRecipes(prev => [{ id, recipe }, ...prev]);
+      if (typeof pendo !== 'undefined') {
+        pendo.track('recipe_saved', {
+          recipe_name: recipe.name,
+          cuisine: recipe.cuisine,
+          meal_type: recipe.mealType,
+          difficulty: recipe.difficulty,
+          prep_time_mins: recipe.prepTimeMins,
+          calories: recipe.calories,
+        });
+      }
       toast.success(`${recipe.name} saved!`);
     } catch { toast.error('Failed to save recipe'); }
   };
 
   const handleRemoveSaved = async (id: string) => {
+    const removed = savedRecipes.find(r => r.id === id);
+    if (typeof pendo !== 'undefined' && removed) {
+      pendo.track('recipe_unsaved', {
+        recipe_name: removed.recipe?.name ?? '',
+      });
+    }
     const snapshot = savedRecipes;
     setSavedRecipes(prev => prev.filter(r => r.id !== id));
     try { await deleteSavedRecipe(id); }

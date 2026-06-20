@@ -56,7 +56,7 @@ function FeatureCell({ value, isPro }: { value: string | boolean; isPro?: boolea
 // ── Claim Early Access Modal ─────────────────────────────────────
 
 function ClaimEarlyAccessModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [email, setEmail] = useState(user?.email ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -70,6 +70,13 @@ function ClaimEarlyAccessModal({ open, onClose }: { open: boolean; onClose: () =
         user_id: user?.id ?? null,
       });
       if (error && !error.message.includes('duplicate')) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track('early_access_claimed', {
+          email_provided: true,
+          has_user_id: !!user?.id,
+          current_plan: user ? (profile?.plan ?? 'free') : 'anonymous',
+        });
+      }
       setDone(true);
       toast.success("You're on the list! We'll email you when payments go live.");
     } catch (err: unknown) {
@@ -144,6 +151,12 @@ export default function PricingPage() {
         .eq('id', user.id);
       if (error) throw error;
       await refreshProfile();
+      if (typeof pendo !== 'undefined') {
+        pendo.track('pro_trial_started', {
+          trial_duration_days: 28,
+          previous_plan: profile?.plan ?? 'free',
+        });
+      }
       toast.success('🎉 Your 28-day Pro Trial is active! Enjoy all Pro features.');
     } catch (err: unknown) {
       toast.error((err as Error).message);

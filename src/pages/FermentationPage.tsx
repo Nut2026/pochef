@@ -136,6 +136,13 @@ function NewBatchDialog({ onCreated, onClose }: { onCreated: (batch: Fermentatio
         ambient_temp_celsius: 22,
         current_day: 1,
       });
+      if (typeof pendo !== 'undefined') {
+        pendo.track('fermentation_batch_created', {
+          batch_name: name.trim(),
+          fermentation_type: type,
+          total_days: totalDays,
+        });
+      }
       toast.success(`${name} batch started! 🧫`);
       onCreated(batch);
       onClose();
@@ -197,6 +204,23 @@ function BatchCard({
     try {
       await updateFermentationBatch(batch.id, { current_day: next, is_complete: isComplete });
       onUpdate({ ...batch, current_day: next, is_complete: isComplete });
+      if (typeof pendo !== 'undefined') {
+        pendo.track('fermentation_day_advanced', {
+          batch_name: batch.name,
+          fermentation_type: batch.fermentation_type,
+          current_day: next,
+          total_days: batch.total_days,
+          is_complete: isComplete,
+        });
+        if (isComplete) {
+          pendo.track('fermentation_batch_completed', {
+            batch_name: batch.name,
+            fermentation_type: batch.fermentation_type,
+            total_days: batch.total_days,
+            completion_method: 'day_advance',
+          });
+        }
+      }
       toast.success(isComplete ? `${batch.name} batch complete! 🎉` : `Day ${next} logged`);
     } catch { toast.error('Update failed'); }
   };
@@ -246,7 +270,18 @@ function BatchCard({
           )}
           {batch.current_day >= batch.total_days && !batch.is_complete && (
             <Button size="sm" className="flex-1 bg-success/90 text-white"
-              onClick={async () => { await updateFermentationBatch(batch.id, { is_complete: true }); onUpdate({ ...batch, is_complete: true }); }}>
+              onClick={async () => {
+                await updateFermentationBatch(batch.id, { is_complete: true });
+                onUpdate({ ...batch, is_complete: true });
+                if (typeof pendo !== 'undefined') {
+                  pendo.track('fermentation_batch_completed', {
+                    batch_name: batch.name,
+                    fermentation_type: batch.fermentation_type,
+                    total_days: batch.total_days,
+                    completion_method: 'manual_complete',
+                  });
+                }
+              }}>
               <Check className="h-3 w-3 mr-1" />Complete
             </Button>
           )}

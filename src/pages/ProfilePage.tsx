@@ -83,6 +83,12 @@ export default function PreferencesPage() {
         .eq('id', user.id);
       if (error) throw error;
       await refreshProfile();
+      if (typeof pendo !== 'undefined') {
+        pendo.track('preferences_saved', {
+          avatar_type: avatarType,
+          currency,
+        });
+      }
       toast.success('Preferences saved!');
     } catch (err: unknown) {
       toast.error((err as Error).message);

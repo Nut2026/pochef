@@ -35,6 +35,11 @@ export default function AuthPage() {
     const { error } = await signIn(loginId.trim(), loginPwd);
     setLoginLoading(false);
     if (error) { toast.error(error.message || 'Login failed'); return; }
+    if (typeof pendo !== 'undefined') {
+      pendo.track('user_signed_in', {
+        login_method: loginId.includes('@') ? 'email' : 'username',
+      });
+    }
     toast.success('Welcome back, Chef!');
     navigate('/dashboard');
   };
@@ -50,6 +55,13 @@ export default function AuthPage() {
     const { error } = await signUp(regUsername.trim(), regEmail.trim(), regPwd);
     setRegLoading(false);
     if (error) { toast.error(error.message || 'Sign up failed'); return; }
+    if (typeof pendo !== 'undefined') {
+      pendo.track('user_signed_up', {
+        username: regUsername.trim(),
+        has_email: !!regEmail.trim(),
+        signup_method: 'email',
+      });
+    }
     toast.success('Account created! Welcome to Pochef.');
     navigate('/dashboard');
   };
