@@ -1,0 +1,5 @@
+pendo.initialize({
+  visitor: {
+    id: ''
+  }
+});
