@@ -188,6 +188,13 @@ export default function CookingAssistantPage() {
                 const aiMsg: ChatMessage = { role: 'assistant', content: data.message, timestamp: new Date().toISOString() };
                 setMessages([aiMsg]);
                 updateCookingSession(sess!.id, { messages: [aiMsg] });
+
+                window.pendo?.trackAgent("agent_response", {
+                  agentId: "YPaO9W_Euo3NBUJMpnMOgqSkFIM",
+                  conversationId: sess!.id,
+                  messageId: crypto.randomUUID(),
+                  content: data.message,
+                });
               }
             });
           }
@@ -226,6 +233,15 @@ export default function CookingAssistantPage() {
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
+
+    window.pendo?.trackAgent("prompt", {
+      agentId: "YPaO9W_Euo3NBUJMpnMOgqSkFIM",
+      conversationId: session.id,
+      messageId: crypto.randomUUID(),
+      content: text,
+      suggestedPrompt: action !== 'chat',
+    });
+
     try {
       const { data } = await supabase.functions.invoke('cooking-assistant', {
         body: {
@@ -243,6 +259,13 @@ export default function CookingAssistantPage() {
       const updated = [...newMessages, aiMsg];
       setMessages(updated);
       await updateCookingSession(session.id, { messages: updated });
+
+      window.pendo?.trackAgent("agent_response", {
+        agentId: "YPaO9W_Euo3NBUJMpnMOgqSkFIM",
+        conversationId: session.id,
+        messageId: crypto.randomUUID(),
+        content: aiMsg.content,
+      });
     } catch {
       toast.error('AI assistant unavailable');
     } finally {
