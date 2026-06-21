@@ -1,4 +1,4 @@
-# Pochef: A Hackathon-Winning Website
+# Pochef: Your Digital Kitchen Twin
 
 ## 1. Application Overview
 
