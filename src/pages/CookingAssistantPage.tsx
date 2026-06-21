@@ -176,6 +176,15 @@ export default function CookingAssistantPage() {
             steps_json: parsedSteps,
           });
           if (!cancelled && sess) {
+            if (typeof pendo !== 'undefined') {
+              pendo.track('cooking_session_started', {
+                recipe_name: recipeFromNav.name,
+                total_steps: parsedSteps.length,
+                difficulty: recipeFromNav.difficulty ?? '',
+                prep_time_mins: recipeFromNav.prepTimeMins ?? 0,
+                has_room_code: !!roomCode,
+              });
+            }
             setSteps(parsedSteps);
             setMessages([]);
             await supabase.functions.invoke('cooking-assistant', {
@@ -256,6 +265,14 @@ export default function CookingAssistantPage() {
     const newSteps = steps.map((s, i) => i === currentIdx ? { ...s, done: true } : s);
     setSteps(newSteps);
     const nextStep = Math.min(currentIdx + 1, steps.length);
+    if (typeof pendo !== 'undefined') {
+      pendo.track('cooking_step_completed', {
+        recipe_name: session.recipe_name,
+        step_number: currentIdx + 1,
+        total_steps: steps.length,
+        progress_percent: Math.round(((currentIdx + 1) / steps.length) * 100),
+      });
+    }
     const updated = { ...session, current_step: nextStep };
     setSession(updated);
     await updateCookingSession(session.id, { current_step: nextStep, steps_json: newSteps });
@@ -303,6 +320,18 @@ export default function CookingAssistantPage() {
 
       // 3. Mark session inactive
       await updateCookingSession(session.id, { is_active: false });
+      if (typeof pendo !== 'undefined') {
+        pendo.track('meal_consumed', {
+          recipe_name: session.recipe_name,
+          calories: cal,
+          protein: recipeFromNav?.protein ?? 0,
+          carbs: recipeFromNav?.carbs ?? 0,
+          fat: recipeFromNav?.fat ?? 0,
+          servings: 1,
+          ingredients_deducted_count: recipeFromNav?.ingredients?.length ?? 0,
+          had_macro_data: cal > 0,
+        });
+      }
       toast.success('Meal logged! Inventory updated 🎉', { duration: 4000 });
       navigate('/cooking');
     } catch (err: unknown) {
@@ -497,7 +526,16 @@ export default function CookingAssistantPage() {
                   <Button
                     size="sm" variant="outline"
                     className="flex-1 text-xs h-8 glass border-warning/40 text-warning"
-                    onClick={() => sendMessage("Help! I'm having trouble with this step.", 'help')}
+                    onClick={() => {
+                      if (typeof pendo !== 'undefined' && session) {
+                        pendo.track('cooking_help_requested', {
+                          recipe_name: session.recipe_name,
+                          current_step: session.current_step + 1,
+                          total_steps: steps.length,
+                        });
+                      }
+                      sendMessage("Help! I'm having trouble with this step.", 'help');
+                    }}
                   >
                     <HelpCircle className="h-3 w-3 mr-1" />Help!
                   </Button>

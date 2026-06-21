@@ -115,6 +115,12 @@ export default function GroceryPage() {
       });
       // Optimistic insert (realtime will also fire, deduped above)
       setItems(prev => [newItem, ...prev]);
+      if (typeof pendo !== 'undefined') {
+        pendo.track('grocery_item_added', {
+          item_name: addName.trim(),
+          quantity: addQty.trim() || '1',
+        });
+      }
       setAddName(''); setAddQty('1');
       setAddOpen(false);
       toast.success('Added to list!');
@@ -124,6 +130,13 @@ export default function GroceryPage() {
   // Optimistic toggle — no reload
   const handleToggle = async (item: GroceryListItem) => {
     const newPurchased = !item.is_purchased;
+    if (typeof pendo !== 'undefined') {
+      pendo.track('grocery_item_purchased', {
+        item_name: item.name,
+        is_purchased: newPurchased,
+        quantity: item.quantity,
+      });
+    }
     // Optimistic update
     setItems(prev => prev.map(i =>
       i.id === item.id
@@ -165,6 +178,12 @@ export default function GroceryPage() {
   const handleClearAllToBuy = () => {
     const toBuy = items.filter(i => !i.is_purchased);
     if (!toBuy.length) return;
+    if (typeof pendo !== 'undefined') {
+      pendo.track('grocery_items_bulk_cleared', {
+        items_cleared_count: toBuy.length,
+        clear_type: 'to_buy',
+      });
+    }
     const snapshot = [...items];
     setItems(prev => prev.filter(i => i.is_purchased));
     toast(`${toBuy.length} items cleared`, {
@@ -181,6 +200,12 @@ export default function GroceryPage() {
   const handleClearAllPurchased = () => {
     const bought = items.filter(i => i.is_purchased);
     if (!bought.length) return;
+    if (typeof pendo !== 'undefined') {
+      pendo.track('grocery_items_bulk_cleared', {
+        items_cleared_count: bought.length,
+        clear_type: 'purchased',
+      });
+    }
     const snapshot = [...items];
     setItems(prev => prev.filter(i => !i.is_purchased));
     toast(`${bought.length} purchased items cleared`, {
@@ -227,6 +252,17 @@ export default function GroceryPage() {
         } catch { /* skip duplicates */ }
       }
       setItems(prev => [...added, ...prev]);
+      if (typeof pendo !== 'undefined') {
+        pendo.track('smart_grocery_list_generated', {
+          items_suggested_count: added.length,
+          days_planned: days,
+          pax,
+          inventory_size: inventory.length,
+          existing_list_size: items.filter(i => !i.is_purchased).length,
+          dietary_goal: profile?.dietary_goal ?? '',
+          cooking_devices_count: (profile?.cooking_devices ?? []).length,
+        });
+      }
       toast.success(`${added.length} items suggested by Smart Suggest!`);
     } catch (err: unknown) {
       toast.error((err as Error).message || 'Smart Suggest failed');
