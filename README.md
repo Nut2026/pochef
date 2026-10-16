@@ -1,6 +1,6 @@
 # Pochef
 
-Your Digital Kitchen Twin — an AI-powered kitchen companion built with Vite, TypeScript, React, and Supabase.
+Your kitchen twin. Smart. 
 
 ## Getting Started
 
@@ -29,10 +29,10 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 
 ## Tech Stack
 
-- **Vite** — build tool
-- **React 18** — UI framework
-- **TypeScript** — type safety
-- **Tailwind CSS** — styling
-- **Supabase** — auth, database, realtime
-- **Radix UI** — accessible primitives
-- **Lucide React** — icons
+- **Vite**
+- **React 18**
+- **TypeScript**
+- **Tailwind CSS**
+- **Supabase**
+- **Radix UI**
+- **Lucide React**
