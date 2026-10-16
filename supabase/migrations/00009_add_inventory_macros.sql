@@ -1,0 +1,5 @@
+ALTER TABLE public.inventory_items
+  ADD COLUMN IF NOT EXISTS calories_per_unit NUMERIC(8,2) DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS protein_per_unit  NUMERIC(8,2) DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS carbs_per_unit    NUMERIC(8,2) DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS fat_per_unit      NUMERIC(8,2) DEFAULT 0;

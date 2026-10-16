@@ -1,0 +1,389 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   POCHEF DESIGN SYSTEM
+   Theme: Warm Ethereal Copper × Glassmorphism
+   ================================================================ */
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* ── Core Palette ── */
+    /* Warm Cream background */
+    --background: 28 67% 97%;
+    --foreground: 16 44% 13%;
+
+    /* Cards & popovers: soft blush */
+    --card: 28 50% 96%;
+    --card-foreground: 16 44% 13%;
+    --popover: 28 67% 97%;
+    --popover-foreground: 16 44% 13%;
+
+    /* Primary: Copper Rose #B87333 */
+    --primary: 27 54% 46%;
+    --primary-foreground: 28 67% 97%;
+
+    /* Secondary: Rose Gold tint */
+    --secondary: 25 55% 92%;
+    --secondary-foreground: 16 44% 20%;
+
+    /* Muted: Soft Blush */
+    --muted: 28 40% 93%;
+    --muted-foreground: 16 20% 42%;
+
+    /* Accent: light rose gold */
+    --accent: 26 52% 90%;
+    --accent-foreground: 16 44% 20%;
+
+    /* Status */
+    --destructive: 0 75% 54%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 60% 38%;
+    --warning: 38 92% 48%;
+    --info: 210 70% 48%;
+
+    /* Borders & inputs */
+    --border: 27 30% 84%;
+    --input: 27 30% 88%;
+    --ring: 27 54% 46%;
+
+    /* Charts — copper palette */
+    --chart-1: 27 54% 46%;
+    --chart-2: 25 65% 65%;
+    --chart-3: 16 44% 30%;
+    --chart-4: 38 92% 55%;
+    --chart-5: 142 55% 42%;
+
+    /* Sidebar */
+    --sidebar-background: 28 60% 95%;
+    --sidebar-foreground: 16 44% 18%;
+    --sidebar-primary: 27 54% 46%;
+    --sidebar-primary-foreground: 28 67% 97%;
+    --sidebar-accent: 25 45% 88%;
+    --sidebar-accent-foreground: 16 44% 20%;
+    --sidebar-border: 27 25% 85%;
+    --sidebar-ring: 27 54% 46%;
+
+    /* Glassmorphism tokens */
+    --glass-bg: rgba(253, 246, 240, 0.55);
+    --glass-border: rgba(184, 115, 51, 0.22);
+    --glass-shadow: rgba(44, 24, 16, 0.1);
+    --glass-blur: 20px;
+
+    /* Gradient tokens */
+    --gradient-copper: linear-gradient(135deg, #b87333, #e8a87c);
+    --gradient-warm: linear-gradient(135deg, #fdf6f0, #f5e6d3);
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(25 65% 65%));
+    --gradient-card: linear-gradient(135deg, rgba(253,246,240,0.8), rgba(245,230,211,0.6));
+    --gradient-background: linear-gradient(160deg, #fdf6f0 0%, #f5e6d3 100%);
+
+    /* Shadows */
+    --shadow-card: 0 2px 12px rgba(44, 24, 16, 0.08), 0 1px 3px rgba(44, 24, 16, 0.05);
+    --shadow-hover: 0 8px 32px rgba(184, 115, 51, 0.18), 0 2px 8px rgba(44, 24, 16, 0.1);
+    --shadow-glass: 0 4px 24px rgba(44, 24, 16, 0.1), 0 1px 4px rgba(184, 115, 51, 0.12);
+  }
+
+  .dark {
+    /* Deep Charcoal #1A1A1A → hsl(0 0% 10%) */
+    --background: 0 0% 10%;
+    /* White #FFFFFF text */
+    --foreground: 0 0% 100%;
+
+    /* Dark Surface #2C2C2E → hsl(240 1% 17%) */
+    --card: 240 1% 17%;
+    --card-foreground: 0 0% 100%;
+    /* Mid Surface #3B3B3C → hsl(240 1% 23%) */
+    --popover: 240 1% 23%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Copper Rose #996867 → hsl(1 22% 50%) */
+    --primary: 1 22% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Mid Surface as secondary bg */
+    --secondary: 240 1% 23%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Elevated Surface #3B3B3C */
+    --muted: 240 1% 23%;
+    /* Silver #AFAFAF → hsl(0 0% 69%) */
+    --muted-foreground: 0 0% 69%;
+
+    --accent: 240 1% 28%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 68% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 55% 45%;
+    --warning: 38 85% 55%;
+    --info: 210 65% 55%;
+
+    /* Copper Rose Tint border */
+    --border: 1 22% 30%;
+    --input: 240 1% 23%;
+    --ring: 1 22% 50%;
+
+    /* Rustic Mauve #B06F69 → hsl(3 24% 56%) */
+    --chart-1: 1 22% 50%;
+    --chart-2: 3 24% 56%;
+    /* Harper #D98B6A → hsl(20 57% 63%) */
+    --chart-3: 20 57% 63%;
+    --chart-4: 280 50% 62%;
+    --chart-5: 142 50% 48%;
+
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 1 22% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 1% 17%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 1 22% 25%;
+    --sidebar-ring: 1 22% 50%;
+
+    /* Copper Rose Tint glass: rgba(153,104,103,0.15) */
+    --glass-bg: rgba(44, 44, 46, 0.70);
+    --glass-border: rgba(153, 104, 103, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.4);
+
+    --gradient-background: linear-gradient(160deg, #1A1A1A 0%, #2C2C2E 100%);
+
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 32px rgba(153, 104, 103, 0.25), 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image: var(--gradient-background);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  /* Glass morphism */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .glass-light {
+    background: rgba(253, 246, 240, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(184, 115, 51, 0.1);
+  }
+
+  .glass-heavy {
+    background: rgba(253, 246, 240, 0.75);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(184, 115, 51, 0.3);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .dark .glass {
+    background: rgba(44, 44, 46, 0.70);
+    border-color: rgba(153, 104, 103, 0.15);
+  }
+
+  .dark .glass-heavy {
+    background: rgba(26, 26, 26, 0.90);
+    border-color: rgba(153, 104, 103, 0.20);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: var(--gradient-copper);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Copper gradient button bg */
+  .bg-copper-gradient {
+    background: var(--gradient-copper);
+  }
+
+  /* Ingredient bubble expiry colors */
+  .bubble-fresh {
+    background: linear-gradient(135deg, hsl(142 55% 55%), hsl(142 55% 42%));
+    border-color: hsl(142 55% 40%);
+  }
+
+  .bubble-soon {
+    background: linear-gradient(135deg, hsl(38 90% 60%), hsl(38 90% 48%));
+    border-color: hsl(38 90% 44%);
+  }
+
+  .bubble-warning {
+    background: linear-gradient(135deg, hsl(27 80% 58%), hsl(27 54% 46%));
+    border-color: hsl(27 54% 42%);
+  }
+
+  .bubble-expired {
+    background: linear-gradient(135deg, hsl(0 60% 50%), hsl(0 60% 38%));
+    border-color: hsl(0 60% 35%);
+  }
+
+  /* Scrollbar classes */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Animations */
+@keyframes bubble-rot {
+  0%   { filter: saturate(1) brightness(1); }
+  50%  { filter: saturate(0.6) brightness(0.85); }
+  100% { filter: saturate(0.3) brightness(0.7); }
+}
+
+@keyframes bubble-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 115, 51, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(184, 115, 51, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-bubble-rot   { animation: bubble-rot 2s ease-in-out infinite; }
+.animate-bubble-pulse { animation: bubble-pulse 2s ease-in-out infinite; }
+.animate-float-up     { animation: float-up 0.4s ease-out both; }
+.animate-scale-in     { animation: scale-in 0.3s ease-out both; }
+
+.animate-shimmer {
+  background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--secondary)) 50%, hsl(var(--muted)) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ── Pricing page animations ─────────────────────────────────── */
+
+/* Smooth rotating border gradient around Pro card — slowed 70% (10s) */
+@keyframes pricing-border-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pricing-pro-border {
+  position: relative;
+  border-radius: 0.75rem;
+}
+
+.pricing-border-anim {
+  z-index: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.pricing-border-anim::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 0.85rem;
+  background: conic-gradient(
+    from 0deg,
+    #b87333 0%,
+    #e8a87c 25%,
+    #fff0e0 45%,
+    #b87333 55%,
+    #e8a87c 75%,
+    #b87333 100%
+  );
+  animation: pricing-border-spin 10s linear infinite;
+  z-index: -1;
+}
+
+/* Pro Trial glowing shadow effect */
+@keyframes trial-glow-pulse {
+  0%, 100% { box-shadow: 0 0 24px 6px rgba(184, 115, 51, 0.30), 0 0 60px 12px rgba(232, 168, 124, 0.15); }
+  50%       { box-shadow: 0 0 40px 12px rgba(184, 115, 51, 0.50), 0 0 80px 24px rgba(232, 168, 124, 0.28); }
+}
+
+.pricing-trial-glow {
+  animation: trial-glow-pulse 2.4s ease-in-out infinite;
+}
+
+/* Golden avatar for Pro / Trial users */
+@keyframes golden-spark {
+  0%, 100% { box-shadow: 0 0 0 2px #b87333, 0 0 12px 4px rgba(184,115,51,0.45); }
+  50%       { box-shadow: 0 0 0 2px #e8a87c, 0 0 22px 8px rgba(232,168,124,0.65); }
+}
+
+.avatar-pro-golden {
+  animation: golden-spark 2s ease-in-out infinite;
+  border: 2px solid #b87333;
+  border-radius: 9999px;
+}
+
+.avatar-pro-golden:hover .avatar-spark-overlay {
+  opacity: 1;
+}
+
+@keyframes metal-sheen {
+  0%   { transform: translateX(-150%) rotate(-25deg); }
+  100% { transform: translateX(250%) rotate(-25deg); }
+}
+
+.avatar-spark-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.avatar-spark-overlay::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 50%;
+  height: 120%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+  animation: metal-sheen 0.7s ease-in-out;
+}

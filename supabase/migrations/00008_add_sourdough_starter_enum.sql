@@ -1,0 +1,1 @@
+ALTER TYPE public.fermentation_type ADD VALUE IF NOT EXISTS 'sourdough_starter';
