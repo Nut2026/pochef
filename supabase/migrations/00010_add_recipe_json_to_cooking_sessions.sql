@@ -1,0 +1,1 @@
+ALTER TABLE cooking_sessions ADD COLUMN IF NOT EXISTS recipe_json JSONB DEFAULT NULL;

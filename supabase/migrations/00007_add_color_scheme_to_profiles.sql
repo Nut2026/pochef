@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS color_scheme TEXT NOT NULL DEFAULT 'light' CHECK (color_scheme IN ('light', 'dark'));
